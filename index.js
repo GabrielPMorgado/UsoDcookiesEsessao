@@ -2,6 +2,8 @@ import express from 'express';
 import path from 'path';
 import session from 'express-session';
 
+import cookieParser from 'cookie-parser';
+
 const host = '0.0.0.0';
 const porta = 3000;
 const app = express();
@@ -17,6 +19,8 @@ app.use(session({
     }
 }));
 
+app.use(cookieParser());
+
 function usuarioEstaAutenticado(requisicao, resposta, next) {
     if (requisicao.session.usuarioAutenticado) {
         next();
@@ -30,7 +34,7 @@ function autenticarUsuario(requisicao, resposta) {
     const senha = requisicao.body.senha;
     if (usuario == 'admin' && senha == '123') {
         requisicao.session.usuarioAutenticado = true;
-        resposta.redirect('/outraPagina.html'); // Redireciona para outra página após o login
+        resposta.redirect('/protegido/index.js'); // Redireciona para outra página após o login
     } else {
         resposta.write(`<!DOCTYPE html>
         <html lang="pt-br">
@@ -78,7 +82,6 @@ app.get('/listaDprodutos', usuarioEstaAutenticado, (req, resp) => {
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Document</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">'
     </head>
     <body>
         
