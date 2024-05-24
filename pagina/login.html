@@ -8,13 +8,15 @@
 </head>
 <body>
     <div class="page">
-        <form method="POST" class="formLogin" action="/login">
+        <form method="POST" class="formLogin" action="/login" novalidate >
             <h1>Login</h1>
             <p>Digite os seus dados de acesso no campo abaixo.</p>
-            <label for="Usuario">Usuario</label>
-            <input type="text" placeholder="Nome de Usuario" autofocus="true" />
-            <label for="password">Senha</label>
-            <input type="password" placeholder="Digite sua Senha" />
+
+            <label for="usuario" id="usuario" action='/login' >Usuario</label>
+            <input type="text" placeholder="Nome de Usuario" autofocus="true" id="usuario" name="usuario" required>
+
+            <label for="password" id="senha"action='/login' >Senha</label>
+            <input type="password" placeholder="Digite sua Senha" id="senha" name="senha" required/>
             <input type="submit" value="Acessar" class="btn" />
         </form>
     </div>

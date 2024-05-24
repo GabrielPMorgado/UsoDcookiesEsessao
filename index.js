@@ -27,7 +27,7 @@ app.use(cookieParser());
 
 function usuarioEstaAutenticado(requisicao, resposta, next){
     if (requisicao.session.usuarioAutenticado){
-        next(); //permitir que a requisição continue a ser processada
+        next(); 
     }
     else{
         resposta.redirect('/login.html');
