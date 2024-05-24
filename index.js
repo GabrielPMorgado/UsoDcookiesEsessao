@@ -21,6 +21,8 @@ app.use(session({
     }
 }));
 
+
+
 app.use(cookieParser());
 
 function usuarioEstaAutenticado(requisicao, resposta, next){
@@ -32,7 +34,7 @@ function usuarioEstaAutenticado(requisicao, resposta, next){
     }
 }
 
-app.use(express.static(path.join(process.cwd(), 'pagina')));
+
 
 function cadastrarUsuario(requisicao, resposta) {
     const codico = requisicao.body.codico;
@@ -43,7 +45,7 @@ function cadastrarUsuario(requisicao, resposta) {
     const estoque = requisicao.body.estoque;
     const fabricante = requisicao.body.fabricante;
 
-    // Aqui você implementa a lógica de cadastro do usuário
+    
     if (codico && descricao && precoCusto && precoVenda && validade && estoque && fabricante) {
         listaUsuarios.push({
             codico: codico,
@@ -137,7 +139,7 @@ function cadastrarUsuario(requisicao, resposta) {
 function autenticarUsuario(requisicao, resposta){
     const usuario = requisicao.body.usuario;
     const senha = requisicao.body.senha;
-    if (usuario == 'Gab' && senha == '123'){
+    if (usuario == 'admin' && senha == '123'){
         requisicao.session.usuarioAutenticado = true;
         resposta.cookie('dataUltimoAcesso', new Date().toLocaleString(),{
             httpOnly: true,
@@ -146,24 +148,30 @@ function autenticarUsuario(requisicao, resposta){
         resposta.redirect('/');
     }
     else{
-        resposta.write('<!DOCTYPE html>');
-        resposta.write('<html>');
-        resposta.write('<head>');
-        resposta.write('<meta charset="UTF-8">');
-        resposta.write('<title>Falha ao realizar login</title>');
-        resposta.write('</head>');
-        resposta.write('<body>');
-        resposta.write('<p>Usuário ou senha inválidos!</p>');
-        resposta.write('<a href="/login.html">Voltar</a>');
-        if (requisicao.cookies.dataUltimoAcesso){
-            resposta.write('<p>');
-            resposta.write('Seu último acesso foi em ' + requisicao.cookies.dataUltimoAcesso);
-            resposta.write('</p>');
-        }
-        resposta.write('</body>');
-        resposta.write('</html>');
-        //resposta.write('<input type="button" value="Voltar" onclick="history.go(-1)"/>');
-        resposta.end();
+        resposta.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>Falha ao realizar login</title>
+        </head>
+        <body>
+            <p>Usuário ou senha inválidos!</p>
+            <a href="/login.html">Voltar</a>
+    `);
+    if (requisicao.cookies.dataUltimoAcesso) {
+        resposta.write(`
+            <p>
+                Seu último acesso foi em ${requisicao.cookies.dataUltimoAcesso}
+            </p>
+        `);
+    }
+
+    resposta.write(`
+        </body>
+        </html>
+    `);
+    resposta.end();
     }
 }
 app.post('/login', autenticarUsuario);
@@ -174,34 +182,38 @@ app.get('/login', (req,resp)=>{
 
 app.get('/logout', (req, resp) => {
     req.session.destroy();
-    //req.session.usuarioLogado = false;
     resp.redirect('/login.html');
-});  
-app.use(express.static(path.join(process.cwd(), 'publico')));
+}); 
+
+
+app.use(express.static(path.join(process.cwd(), 'pagina')));
 app.use(usuarioEstaAutenticado,express.static(path.join(process.cwd(), 'protegido')));
+
+app.post('/formulario',usuarioEstaAutenticado,cadastrarUsuario);
+
 app.post('/cadastrarUsuario', usuarioEstaAutenticado, cadastrarUsuario);
 
 
-function gerarPagina(requisicao, resposta) {
+app.get('/listarUsuarios', usuarioEstaAutenticado, (req, resp) => {
     let conteudoResposta = `
     <!DOCTYPE html>
     <html lang="pt-br">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Resultado do cadastro das empresas</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">'
+        <title>Lista de Usuários</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     </head>
     <body>
         <h1>Lista de Usuários</h1>
         <table class="table table-striped">
             <tr>
-                <th>codico</th>
-                <th>descricao</th>
-                <th>precoCusto</th>
-                <th>procoVenda</th>
+                <th>Código</th>
+                <th>Descrição</th>
+                <th>Preço de Custo</th>
+                <th>Preço de Venda</th>
                 <th>Validade</th>
-                <th>estoque</th>
+                <th>Estoque</th>
                 <th>Fabricante</th>
             </tr>`;
 
@@ -220,19 +232,29 @@ function gerarPagina(requisicao, resposta) {
 
     conteudoResposta += `
         </table>
-        <a href="/">Voltar</a>
-        if (req.cookies.dataUltimoAcesso){
-            resp.write('<p>');
-            resp.write('Seu último acesso foi em ' + req.cookies.dataUltimoAcesso);
-            resp.write('</p>');
-        }
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>'
+        <a href="/">Voltar</a>`;
+    
+    if (req.cookies.dataUltimoAcesso) {
+        conteudoResposta += `
+            <p>Seu último acesso foi em ${req.cookies.dataUltimoAcesso}</p>`;
+    }
+
+    conteudoResposta += `
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     </body>
     </html>`;
 
-    resposta.write(conteudoResposta);
-    resposta.end();
-}
+    resp.send(conteudoResposta);
+});
+
+
+
+
+
+
+
+
+
 
 
 
