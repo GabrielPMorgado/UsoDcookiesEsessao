@@ -1,0 +1,24 @@
+{
+  "name": "usodcookiesesessao",
+  "version": "1.0.0",
+  "description": "Atividade 4 - Uso de cookies e sessão",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GabrielPMorgado/UsoDcookiesEsessao.git"
+  },
+  "author": "Gabriel Morgado",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GabrielPMorgado/UsoDcookiesEsessao/issues"
+  },
+  "homepage": "https://github.com/GabrielPMorgado/UsoDcookiesEsessao#readme",
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
