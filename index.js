@@ -30,7 +30,7 @@ function autenticarUsuario(requisicao, resposta) {
     const senha = requisicao.body.senha;
     if (usuario == 'admin' && senha == '123') {
         requisicao.session.usuarioAutenticado = true;
-        resposta.redirect('/');
+        resposta.redirect('/outraPagina.html'); // Redireciona para outra página após o login
     } else {
         resposta.write(`<!DOCTYPE html>
         <html lang="pt-br">
