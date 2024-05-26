@@ -162,19 +162,48 @@ function autenticarUsuario(requisicao, resposta) {
         <head>
             <meta charset="UTF-8">
             <title>Falha ao realizar login</title>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    background-color: #f4f4f4;
+                    padding: 20px;
+                }
+                .container {
+                    max-width: 400px;
+                    margin: 0 auto;
+                    background-color: #fff;
+                    padding: 20px;
+                    border-radius: 5px;
+                    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                }
+                .error-message {
+                    color: #dc3545;
+                    font-weight: bold;
+                    margin-bottom: 10px;
+                }
+                .link {
+                    color: #007bff;
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+            </style>
         </head>
         <body>
-            <p>Usuário ou senha inválidos!</p>
-            <a href="/login.html">Voltar</a>`);
-        if (requisicao.cookies.dataUltimoAcesso) {
-            resposta.write(`
-                <p>
-                    Seu último acesso foi em ${requisicao.cookies.dataUltimoAcesso}
-                </p>
-            `);
-        }
-
-        resposta.write(`
+            <div class="container">
+                <h1>Falha ao realizar login</h1>
+                <p class="error-message">Usuário ou senha inválidos!</p>
+                <a href="/login.html" class="link">Voltar</a>
+                <div id="lastAccess"></div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                    const lastAccess = document.getElementById('lastAccess');
+                    const lastAccessTime = '${requisicao.cookies.dataUltimoAcesso || ''}';
+                    if (lastAccessTime) {
+                        lastAccess.innerHTML = '<p>Seu último acesso foi em ' + lastAccessTime + '</p>';
+                    }
+                });
+            </script>
         </body>
         </html>
         `);
