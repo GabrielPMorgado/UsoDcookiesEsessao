@@ -39,8 +39,28 @@ input[type="button"] {
     border-radius: 4px;
     cursor: pointer;
 }
-
-input[type="submit"]:hover,
-input[type="button"]:hover {
-    background-color: #45a049;
+#cd {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
 }
+
+#cd:hover {
+    background-color: darkgreen;
+}
+
+input[type="button"] {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+}
+
+input[type="button"]:hover {
+    background-color: darkred;
+}
+
+
