@@ -236,38 +236,112 @@ app.get('/listarUsuarios', usuarioEstaAutenticado, (req, resp) => {
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Lista de Usuários</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <title>Lista de Produtos</title>
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+                background-color: #f8f9fa;
+                margin: 0;
+                padding: 20px;
+                color: #333;
+            }
+            h1 {
+                text-align: center;
+                color: #333;
+                margin-bottom: 30px;
+            }
+            table {
+                width: 80%;
+                margin: 0 auto;
+                border-collapse: collapse;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                background-color: #fff;
+            }
+            th, td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid #ddd;
+            }
+            th {
+                background-color: #333;
+                color: white;
+                font-weight: bold;
+            }
+            tr:nth-child(even) {
+                background-color: #f2f2f2;
+            }
+            tr:hover {
+                background-color: #e9e9e9;
+            }
+            .button-container {
+                text-align: center;
+                margin-top: 20px;
+            }
+            a.button {
+                display: inline-block;
+                margin: 10px;
+                padding: 10px 20px;
+                text-align: center;
+                color: white;
+                text-decoration: none;
+                border-radius: 5px;
+                transition: background-color 0.3s;
+            }
+            a.button.voltar {
+                background-color: #007bff;
+            }
+            a.button.voltar:hover {
+                background-color: #0056b3;
+            }
+            a.button.cadastrar {
+                background-color: #28a745;
+            }
+            a.button.cadastrar:hover {
+                background-color: #218838;
+            }
+            p {
+                text-align: center;
+                color: #666;
+                margin-top: 20px;
+            }
+        </style>
     </head>
     <body>
         <h1>Lista de Produtos</h1>
-        <table class="table table-striped">
-            <tr>
-                <th>Código</th>
-                <th>Descrição</th>
-                <th>Preço de Custo</th>
-                <th>Preço de Venda</th>
-                <th>Validade</th>
-                <th>Estoque</th>
-                <th>Fabricante</th>
-            </tr>`;
-
+        <table>
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Descrição</th>
+                    <th>Preço de Custo</th>
+                    <th>Preço de Venda</th>
+                    <th>Validade</th>
+                    <th>Estoque</th>
+                    <th>Fabricante</th>
+                </tr>
+            </thead>
+            <tbody>`;
+    
     for (let i = 0; i < listaUsuarios.length; i++) {
         conteudoResposta += `
-            <tr>
-                <td>${listaUsuarios[i].codigo}</td>
-                <td>${listaUsuarios[i].descricao}</td>
-                <td>${listaUsuarios[i].precoCusto}</td>
-                <td>${listaUsuarios[i].precoVenda}</td>
-                <td>${listaUsuarios[i].validade}</td>
-                <td>${listaUsuarios[i].estoque}</td>
-                <td>${listaUsuarios[i].fabricante}</td>
-            </tr>`;
+                <tr>
+                    <td>${listaUsuarios[i].codigo}</td>
+                    <td>${listaUsuarios[i].descricao}</td>
+                    <td>${listaUsuarios[i].precoCusto}</td>
+                    <td>${listaUsuarios[i].precoVenda}</td>
+                    <td>${listaUsuarios[i].validade}</td>
+                    <td>${listaUsuarios[i].estoque}</td>
+                    <td>${listaUsuarios[i].fabricante}</td>
+                </tr>`;
     }
 
     conteudoResposta += `
+            </tbody>
         </table>
-        <a href="/">Voltar</a>`;
+        <div class="button-container">
+            <a href="/" class="button voltar">Voltar</a>
+            <a href="./formulario.html" class="button cadastrar">Continuar Cadastrando</a>
+        </div>`;
     
     if (req.cookies.dataUltimoAcesso) {
         conteudoResposta += `
@@ -275,12 +349,13 @@ app.get('/listarUsuarios', usuarioEstaAutenticado, (req, resp) => {
     }
 
     conteudoResposta += `
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
     </body>
     </html>`;
 
     resp.send(conteudoResposta);
 });
+
+
 
 app.listen(porta, host, () => {
     console.log(`Servidor rodando em http://${host}:${porta}`);
